@@ -6,13 +6,14 @@ rm(list = ls())
 library(anytime)
 library(lubridate)
 
+this.dir <- dirname(parent.frame(2)$ofile)
+setwd(this.dir)
+dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
 
-dailyData <- read.csv("../dailyReturn1983_2000NYSE_short_HL.csv")
+permNoList <- unique(dailyData$PERMNO)
 
-permNoList <- unlist(read.table("../codeList.txt"))
-
-startDate <- anydate("1983-01-01")
-endDate <- anydate("2000-12-31")
+startDate <- anydate("1962-07-01")
+endDate <- anydate("2018-08-01")
 
 
 time <- vector()
@@ -24,7 +25,7 @@ while (startIter < endDate){
 }
 
 CSOutput <- data.frame(anydate(time))
-names(CSOutput)[0] <- "month"
+names(CSOutput)[1] <- "month"
 count <- 0
 
 for (i in permNoList){
@@ -69,11 +70,11 @@ for (i in permNoList){
     startIter <- monthEnd
   }
   CSOutput <- cbind(CSOutput, CSmeasure)
-  
+  names(CSOutput)[count + 1] = i
 }
 
 #ZRMean <- rowMeans(ZROutput[,2:ncol(ZROutput)],na.rm = TRUE)
 
 #plot(ZROutput$time, ZRMean)
-save(CSOutput,file="SOutput.Rda")
-
+save(CSOutput,file="CSOutput.Rda")
+write.csv(CSOutput, file="CSOutput.csv",row.names=FALSE)
