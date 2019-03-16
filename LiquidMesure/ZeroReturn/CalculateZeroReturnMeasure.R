@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd(utils::getSrcDirectory()[1])
+#setwd(utils::getSrcDirectory()[1])
 
 # references: pricing of liquidity risks: evidence from multiple liquidity measure
 #             pricing the commonality across alternative measures of liquidity
@@ -8,12 +8,12 @@ library(anytime)
 library(lubridate)
 
 
-dailyData <- read.csv("../dailyReturn1983_2000NYSE_short.csv")
+dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
 
-permNoList <- unlist(read.table("../codeList.txt"))
+permNoList <- unique(dailyData$PERMNO)
 
-startDate <- anydate("1983-01-01")
-endDate <- anydate("2000-12-31")
+startDate <- anydate("1962-07-01")
+endDate <- anydate("2018-08-01")
 
 
 time <- vector()
@@ -53,11 +53,11 @@ for (i in permNoList){
     startIter <- monthEnd
   }
   ZROutput <- cbind(ZROutput, ZRmeasure)
-  
+  names(ZROutput)[count + 1] = i
 }
 
 ZRMean <- rowMeans(ZROutput[,2:ncol(ZROutput)],na.rm = TRUE)
 
 plot(ZROutput$time, ZRMean)
 save(ZROutput,file="ZROutput.Rda")
-
+write.csv(ZROutput, file="ZROutput.csv",row.names=FALSE)
