@@ -15,8 +15,8 @@ dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
 permNoList <- unique(dailyData$PERMNO)
 dailyData$date <- anydate(dailyData$date)
 
-startDate <- anydate("1983-01-01")
-endDate <- anydate("2000-12-31")
+startDate <- anydate("1962-07-01")
+endDate <- anydate("2018-08-01")
 
 
 time <- vector()

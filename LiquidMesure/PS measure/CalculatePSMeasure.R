@@ -7,16 +7,18 @@ rm(list = ls())
 library(anytime)
 library(lubridate)
 
-FamaFactor <- read.csv("../FamaFrenchFourFactorDaily.csv")
+FamaFactor <- read.csv("../Data/FamaFrenchFourFactorDaily.csv")
 FamaFactor$date <- anydate(FamaFactor$date)
 mkt <- FamaFactor$mktrf + FamaFactor$rf
-FamaFactor <- cbind(FamaFactor, mkt)
-dailyData <- read.csv("../dailyReturn1983_2000NYSE_short.csv")
-dailyData$date <- anydate(dailyData$date)
-permNoList <- unlist(read.table("../codeList.txt"))
 
-startDate <- anydate("1983-01-01")
-endDate <- anydate("2000-12-31")
+FamaFactor <- cbind(FamaFactor, mkt)
+dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
+permNoList <- unique(dailyData$PERMNO)
+dailyData$date <- anydate(dailyData$date)
+
+
+startDate <- anydate("1962-07-01")
+endDate <- anydate("2018-08-01")
 
 
 time <- vector()
@@ -30,7 +32,7 @@ while (startIter < endDate){
 PSOutput <- data.frame(anydate(time))
 names(PSOutput)[0] <- "month"
 count <- 0
-for (i in permNoList[1]){
+for (i in permNoList){
   count <- count + 1
   print(count)
   stockData = dailyData[dailyData$PERMNO == i,]
@@ -62,8 +64,9 @@ for (i in permNoList[1]){
       startIter <- monthEnd
   }
   PSOutput <- cbind(PSOutput, PSmeasure)
-  
+  names(PSOutput)[count + 1] = i
  } 
 
 
 save(PSOutput,file="PSOutput.Rda")
+write.csv(PSOutput, file="PSOutput.csv",row.names=FALSE)
