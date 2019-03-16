@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd("E:\\Dropbox\\financeResearch\\WRDS\\LiquidMesure\\Amihud and turnover")
+
 
 # references: pricing of liquidity risks: evidence from multiple liquidity measure
 #             pricing the commonality across alternative measures of liquidity
@@ -16,14 +16,14 @@ Roll <- function(inp){
   else { return (-sqrt(Scov)) }
 }
 
+#this.dir <- dirname(parent.frame(2)$ofile)
+#setwd(this.dir)
+dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
 
+permNoList <- unique(dailyData$PERMNO)
 
-dailyData <- read.csv("..\dailyReturn1983_2000NYSE_short.csv")
-
-permNoList <- unlist(read.table("codeList.txt"))
-
-startDate <- anydate("1983-01-01")
-endDate <- anydate("2000-12-31")
+startDate <- anydate("1962-07-01")
+endDate <- anydate("2018-08-01")
 
 
 time <- vector()
@@ -41,7 +41,7 @@ names(TurnoverOutput)[0] <- "month"
 RollOutput <- data.frame(time)
 names(RollOutput)[0] <- "month"
 count <- 0
-for (i in permNoList){
+for (i in permNoList[1]){
   count <- count + 1
   print(count)
   stockData = dailyData[dailyData$PERMNO == i,]
@@ -70,16 +70,22 @@ for (i in permNoList){
     Tmeasure <- c(Tmeasure, T) 
     Rmeasure <- c(Rmeasure, R)  
     
+    
+    
+    
+    
     startIter <- monthEnd
   }
   AOutput <- cbind(AOutput, Ameasure)
-  
   TurnoverOutput <- cbind(TurnoverOutput, Tmeasure)
   RollOutput <- cbind(RollOutput, Rmeasure)
-  
+  names(AOutput)[count + 1] = i
+  names(TurnoverOutput)[count + 1] = i
+  names(RollOutput)[count + 1] = i
   
 }
 
-plot(AOutput$time)
-
-
+#plot(AOutput$time)
+write.csv(AOutput, file="AOutput.csv",row.names=FALSE)
+write.csv(TurnoverOutput, file="TurnoverOutput.csv",row.names=FALSE)
+write.csv(RollOutput, file="RollOutput.csv",row.names=FALSE)
