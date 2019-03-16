@@ -41,7 +41,7 @@ names(TurnoverOutput)[0] <- "month"
 RollOutput <- data.frame(time)
 names(RollOutput)[0] <- "month"
 count <- 0
-for (i in permNoList[1]){
+for (i in permNoList){
   count <- count + 1
   print(count)
   stockData = dailyData[dailyData$PERMNO == i,]

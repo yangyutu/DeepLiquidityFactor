@@ -11,9 +11,9 @@ tickOne <- c(0.125, 0.25, 0.5, 1) # before July 1997
 tickTwo <- c(0.0625, 0.125, 0.25, 0.5, 1) # between July 1997 and January 2001
 tickThree <- c(0.01, 0.05, 0.1, 0.25, 1) # after January 2001
 
-dailyData <- read.csv("../dailyReturn1983_2000NYSE_short.csv")
+dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
+permNoList <- unique(dailyData$PERMNO)
 dailyData$date <- anydate(dailyData$date)
-permNoList <- unlist(read.table("../codeList.txt"))
 
 startDate <- anydate("1983-01-01")
 endDate <- anydate("2000-12-31")
@@ -30,7 +30,7 @@ while (startIter < endDate){
 ETOutput <- data.frame(anydate(time))
 names(ETOutput)[0] <- "month"
 count <- 0
-for (i in permNoList[1]){
+for (i in permNoList){
   count <- count + 1
   print(count)
   stockData = dailyData[dailyData$PERMNO == i,]
@@ -91,8 +91,9 @@ for (i in permNoList[1]){
       startIter <- monthEnd
   }
   ETOutput <- cbind(ETOutput, ETmeasure)
-  
+  names(ETOutput)[count + 1] = i
  } 
 
 
 save(ETOutput,file="ETOutput.Rda")
+write.csv(ETOutput, file="ETOutput.csv",row.names=FALSE)
