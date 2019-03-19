@@ -58,6 +58,6 @@ for (i in permNoList){
 
 ZRMean <- rowMeans(ZROutput[,2:ncol(ZROutput)],na.rm = TRUE)
 
-plot(ZROutput$time, ZRMean)
+#plot(ZROutput$time, ZRMean)
 save(ZROutput,file="ZROutput.Rda")
 write.csv(ZROutput, file="ZROutput.csv",row.names=FALSE)
