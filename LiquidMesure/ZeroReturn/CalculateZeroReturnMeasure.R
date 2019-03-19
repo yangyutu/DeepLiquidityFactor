@@ -24,7 +24,7 @@ while (startIter < endDate){
   startIter <-startIter %m+% months(1)
 }
 
-ZROutput <- data.frame(time)
+ZROutput <- data.frame(anydate(time))
 names(ZROutput)[0] <- "month"
 count <- 0
 for (i in permNoList){

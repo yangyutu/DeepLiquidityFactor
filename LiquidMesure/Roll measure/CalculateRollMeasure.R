@@ -16,14 +16,12 @@ Roll <- function(inp){
   else { return (-sqrt(Scov)) }
 }
 
-
-
-dailyData <- read.csv("../dailyReturn1983_2000NYSE_short.csv")
+dailyData <- read.csv("../Data/dailyReturn1962_2018NYSEAME_short_HL.csv")
 dailyData$date <- anydate(dailyData$date)
-permNoList <- unlist(read.table("../codeList.txt"))
+permNoList <- unique(dailyData$PERMNO)
 
-startDate <- anydate("1983-01-01")
-endDate <- anydate("2000-12-31")
+startDate <- anydate("1962-07-01")
+endDate <- anydate("2018-08-01")
 
 
 time <- vector()
@@ -63,8 +61,9 @@ for (i in permNoList){
     startIter <- monthEnd
   }
   RollOutput <- cbind(RollOutput, Rmeasure)
-  
+  names(RollOutput)[count + 1] = i
   
 }
 
 save(RollOutput,file="RollOutput.Rda")
+write.csv(RollOutput, file="RollOutput.csv",row.names=FALSE)
