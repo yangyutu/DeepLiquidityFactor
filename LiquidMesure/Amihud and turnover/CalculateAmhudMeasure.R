@@ -7,14 +7,6 @@ rm(list = ls())
 library(anytime)
 library(lubridate)
 
-# define the Roll measure function
-Roll <- function(inp){
-  a <- acf(as.matrix(inp),plot=FALSE,lag=1,type="covariance")
-  r <- 0
-  Scov <- a$acf[2]
-  if (Scov<0){ return (2*sqrt(-Scov)) }
-  else { return (-sqrt(Scov)) }
-}
 
 #this.dir <- dirname(parent.frame(2)$ofile)
 #setwd(this.dir)
@@ -34,12 +26,11 @@ while (startIter < endDate){
   startIter <-startIter %m+% months(1)
 }
 
-AOutput <- data.frame(time)
+AOutput <- data.frame(anytime(time))
 names(AOutput)[0] <- "month"
-TurnoverOutput <- data.frame(time)
+TurnoverOutput <- data.frame(anytime(time))
 names(TurnoverOutput)[0] <- "month"
-RollOutput <- data.frame(time)
-names(RollOutput)[0] <- "month"
+
 count <- 0
 for (i in permNoList){
   count <- count + 1
@@ -60,15 +51,15 @@ for (i in permNoList){
     if (nrow(nonZeroData) == 0) {
       A <- NA
       T <- NA ## turnOver
-      R <- NA
+#      R <- NA
     }else{
       A <- mean(abs(nonZeroData$RET)/nonZeroData$PRC/nonZeroData$VOL)*1e6
       T <- sum(nonZeroData$VOL)/mean(nonZeroData$SHROUT)
-      R <- Roll(nonZeroData$RET)
+#      R <- Roll(nonZeroData$RET)
     }
     Ameasure <- c(Ameasure, A)
     Tmeasure <- c(Tmeasure, T) 
-    Rmeasure <- c(Rmeasure, R)  
+#    Rmeasure <- c(Rmeasure, R)  
     
     
     
@@ -78,14 +69,14 @@ for (i in permNoList){
   }
   AOutput <- cbind(AOutput, Ameasure)
   TurnoverOutput <- cbind(TurnoverOutput, Tmeasure)
-  RollOutput <- cbind(RollOutput, Rmeasure)
+#  RollOutput <- cbind(RollOutput, Rmeasure)
   names(AOutput)[count + 1] = i
   names(TurnoverOutput)[count + 1] = i
-  names(RollOutput)[count + 1] = i
+#  names(RollOutput)[count + 1] = i
   
 }
 
 #plot(AOutput$time)
 write.csv(AOutput, file="AOutput.csv",row.names=FALSE)
 write.csv(TurnoverOutput, file="TurnoverOutput.csv",row.names=FALSE)
-write.csv(RollOutput, file="RollOutput.csv",row.names=FALSE)
+#write.csv(RollOutput, file="RollOutput.csv",row.names=FALSE)
