@@ -26,7 +26,7 @@ while (startIter < endDate){
   startIter <-startIter %m+% months(1)
 }
 
-AOutput <- data.frame(anytime(time))
+AOutput <- data.frame(anydate(time))
 names(AOutput)[0] <- "month"
 TurnoverOutput <- data.frame(anytime(time))
 names(TurnoverOutput)[0] <- "month"
@@ -46,7 +46,7 @@ for (i in permNoList){
   
   while (startIter < endDate){
     monthEnd <- startIter %m+% months(1)
-    monthData <- stockData[anytime(stockData$date) >= startIter & anytime(stockData$date) <monthEnd,]
+    monthData <- stockData[anydate(stockData$date) >= startIter & anydate(stockData$date) <monthEnd,]
     nonZeroData <- monthData[monthData$VOL != 0,]
     if (nrow(nonZeroData) == 0) {
       A <- NA
